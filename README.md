@@ -4,7 +4,7 @@ Load nvim session files from target directory
 
 
 ## Install
-Plug 'nvim-telescope/telescope-sessions-picker.nvim'
+use 'JoseConseco/telescope_sessions_picker.nvim'
 
 ```
 ## Setup
@@ -21,8 +21,8 @@ setup function.
 ```lua
 require'telescope'.setup {
   extensions = {
-    sessions_picer = {
-      sessions_dir = '',
+    sessions_picker = {
+      sessions_dir = vim.fn.stdpath('data') ..'/session/',  -- same as '/home/user/.local/share/nvim/session'
     }
   },
 }
@@ -33,7 +33,7 @@ require'telescope'.setup {
 :Telescope sessions_picker
 
 "Using lua function
-lua require('telescope').extensions.media_files.media_files()
+lua require('telescope').extensions.sessions_picker.sessions_picker()
 ```
 
 

@@ -1,3 +1,8 @@
+P = function(v)
+	print(vim.inspect(v))
+	return v
+end
+
 local has_telescope, telescope = pcall(require, 'telescope')
 
 if not has_telescope then
@@ -24,10 +29,10 @@ local load_session = function(prompt_bufnr)
   vim.fn.execute(":so " .. dir, "silent")
 end
 
-require('telescope').setup {}
+-- require('telescope').setup {}
 
-local sessions_picker = function(projects)
-  pickers.new({}, {
+local sessions_picker = function(projects, opts)
+  pickers.new(opts, {
     prompt_title = 'Select a session',
     results_title = 'Sessions',
     finder = finders.new_table {
@@ -49,24 +54,34 @@ local sessions_picker = function(projects)
   }):find()
 end
 
-local sdir = vim.fn.stdpath('data') ..'/session/' --TODO - use global var or smthign
+local sessions_dir = vim.fn.stdpath('data') ..'/session/' --TODO - use global var or smthign
 
-M.run_sessions_picker = function()
-  local projects = {}
-  local handle = vim.loop.fs_scandir(sdir)
+M.setup = function(ext_config)
+		sessions_dir = ext_config.sessions_dir or vim.fn.stdpath('data') ..'/session/'
+end
+
+M.run_sessions_picker = function(opts)
+	opts = opts or {}
+  local handle = vim.loop.fs_scandir(sessions_dir)
+	-- P(handle)
+	if handle == nil then
+		print('Setup correct \'sessions_dir\': "' .. sessions_dir .. '" does not seem to exist. Cancelling')
+		return
+	end
+
   if type(handle) == 'string' then
     vim.api.nvim_err_writeln(handle)
     return
   end
+  local existing_projects = {}
   while true do
   	local name, t = vim.loop.fs_scandir_next(handle) -- file_name, dir_type
    	if not name then break end
 		if t == 'file' then
-			table.insert( projects, {name = name, path = sdir..name})
+			table.insert( existing_projects, {name = name, path = sessions_dir..name})
     end
   end
-
-  sessions_picker(projects)
+  sessions_picker(existing_projects, opts)
 end
 
 -- return telescope.register_extension {exports = {sessions = run_sessions_picker}}
