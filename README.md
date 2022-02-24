@@ -1,7 +1,7 @@
 # Telescope Sessions loader
 Load nvim session files from target directory
 
-
+![Session Thumb](./img/./session_picker.jpg)
 
 ## Install
 use 'JoseConseco/telescope_sessions_picker.nvim'
