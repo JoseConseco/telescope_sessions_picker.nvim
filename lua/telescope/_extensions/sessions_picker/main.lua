@@ -16,6 +16,7 @@ local finders = require("telescope.finders")
 local pickers = require("telescope.pickers")
 local conf = require("telescope.config").values
 
+local sessions_dir = vim.fn.stdpath('data') ..'/session/' --TODO - use global var or smthign
 -- local project_actions = require("telescope._extensions.project_actions")
 
 local load_session = function(prompt_bufnr)
@@ -50,6 +51,38 @@ local load_session = function(prompt_bufnr)
   end)
 end
 
+
+local new_session = function(prompt_bufnr)
+  -- local dir = actions_state.get_selected_entry(prompt_bufnr).value
+  actions.close(prompt_bufnr, true)
+  -- local current_sdir = vim.api.nvim_eval('v:this_session')
+	local current_dir = vim.fn.getcwd()
+	-- get last directory from current_dir path
+	local last_dir_name = string.match(current_dir, "/[^/]*/?$")  -- match  /dir/ from eg /home/user/dir/
+	if last_dir_name:sub(-1) == "/" then
+		last_dir_name = last_dir_name:sub(2, -2) -- delete first and last slash
+	else
+		last_dir_name = last_dir_name:sub(2)
+	end
+	local picked_name = vim.fn.input('New Session Name: ', last_dir_name)
+	if picked_name == '' then
+		return
+	end
+	local session_file = sessions_dir..'/'..picked_name
+	vim.fn.execute("mksession! "..session_file)
+	vim.api.nvim_echo({{'Created: '..session_file,}}, true, {})
+end
+
+local del_session = function(prompt_bufnr)
+  local dir = actions_state.get_selected_entry(prompt_bufnr).value
+  actions.close(prompt_bufnr, true)
+	local user_answer = vim.fn.confirm('Remove: '..dir, "&Yes\n&No")
+	if user_answer == 1 then
+		os.remove(dir)
+		vim.api.nvim_echo({{'Removed: '..dir}}, true, {})
+	end
+end
+
 -- require('telescope').setup {}
 
 local sessions_picker = function(projects, opts)
@@ -69,13 +102,13 @@ local sessions_picker = function(projects, opts)
     sorter = conf.file_sorter({}),
     attach_mappings = function(prompt_bufnr, map)
       map('i', '<CR>', load_session)
-      -- map('i', '<Del>', del_session) -- TODO
+      map('i', '<C-n>', new_session) -- TODO
+      map('i', '<Del>', del_session) -- TODO
       return true
     end
   }):find()
 end
 
-local sessions_dir = vim.fn.stdpath('data') ..'/session/' --TODO - use global var or smthign
 
 M.setup = function(ext_config)
 		sessions_dir = ext_config.sessions_dir or vim.fn.stdpath('data') ..'/session/'
