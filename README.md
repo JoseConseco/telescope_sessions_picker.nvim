@@ -28,6 +28,11 @@ require'telescope'.setup {
 }
 ```
 
+## Hotkeys
+CR - open Session file (same as so: xyz)
+DEL - remove selected session file (not the project file, just session file!)
+C-n - create new session from cwd.
+
 ## Available commands
 ```viml
 :Telescope sessions_picker
