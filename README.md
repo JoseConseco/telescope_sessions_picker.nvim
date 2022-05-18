@@ -4,9 +4,11 @@ Load nvim session files from target directory
 ![Session Thumb](./img/./session_picker.jpg)
 
 ## Install
-use 'JoseConseco/telescope_sessions_picker.nvim'
 
 ```
+use 'JoseConseco/telescope_sessions_picker.nvim'
+```
+
 ## Setup
 
 ``` lua
@@ -29,9 +31,9 @@ require'telescope'.setup {
 ```
 
 ## Hotkeys
-CR - open Session file (same as so: xyz)
-DEL - remove selected session file (not the project file, just session file!)
-C-n - create new session from cwd.
+`<CR>` - open Session file (same as :so xyz)
+'<DEL>' - remove selected session file (not the project file, just session file!)
+'<C-n>' - create new session from cwd.
 
 ## Available commands
 ```viml
