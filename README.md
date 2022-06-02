@@ -9,13 +9,6 @@ Load nvim session files from target directory
 use 'JoseConseco/telescope_sessions_picker.nvim'
 ```
 
-## Setup
-
-``` lua
-require('telescope').load_extension('sessions_picker')
-
-```
-
 ## Configuration
 This extension can be configured using `extensions` field inside Telescope
 setup function.
@@ -28,6 +21,7 @@ require'telescope'.setup {
     }
   },
 }
+require('telescope').load_extension('sessions_picker')
 ```
 
 ## Hotkeys
