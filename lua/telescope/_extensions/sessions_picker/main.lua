@@ -33,7 +33,9 @@ local load_session = function(prompt_bufnr)
 	-- vim.fn.execute(":normal zx", "silent")
 	-- vim.fn.execute(":LspStart", "silent")
   -- Stop all LSP clients first
-  vim.lsp.stop_client(vim.lsp.get_active_clients())
+	for _, client in pairs(vim.lsp.get_active_clients()) do
+		vim.lsp.stop_client(client)
+	end
 
   -- Scedule buffers cleanup to avoid callback issues and source the session
   vim.schedule(function()
