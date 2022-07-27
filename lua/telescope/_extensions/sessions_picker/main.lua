@@ -25,10 +25,10 @@ local load_session = function(prompt_bufnr)
   actions.close(prompt_bufnr, true)
   local current_sdir = vim.api.nvim_eval('v:this_session')
   if has_minisessions then
-    if MiniSessions.config.autowrite then
+    if mini.config.autowrite then
       vim.fn.execute("mksession! "..current_sdir)
     end
-  else if current_sdir or current_sdir ~= '' then --save current session if exist
+  elseif current_sdir or current_sdir ~= '' then --save current session if exist
     vim.fn.execute("mksession! "..current_sdir)
   end
 	--  vim.fn.execute(":LspStop", "silent")
