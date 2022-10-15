@@ -80,6 +80,17 @@ local new_session = function(prompt_bufnr)
 	vim.api.nvim_echo({{'Created: '..session_file,}}, true, {})
 end
 
+local save_current = function(prompt_bufnr)
+  -- local dir = actions_state.get_selected_entry(prompt_bufnr).value
+  actions.close(prompt_bufnr, true)
+  local current_sdir = vim.api.nvim_eval('v:this_session')
+	if current_sdir == '' then
+		return
+	end
+	vim.fn.execute("mksession! "..current_sdir)
+	vim.api.nvim_echo({{'Updated: '..current_sdir,}}, true, {})
+end
+
 local del_session = function(prompt_bufnr)
   local dir = actions_state.get_selected_entry(prompt_bufnr).value
   actions.close(prompt_bufnr, true)
@@ -111,6 +122,7 @@ local sessions_picker = function(projects, opts)
       map('i', '<CR>', load_session)
       map('i', '<C-n>', new_session) -- TODO
       map('i', '<Del>', del_session) -- TODO
+      map('i', '<C-s>', save_current) -- TODO
       return true
     end
   }):find()
