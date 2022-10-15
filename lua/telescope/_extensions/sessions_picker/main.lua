@@ -4,6 +4,7 @@ P = function(v)
 end
 
 local has_telescope, telescope = pcall(require, 'telescope')
+local has_minisessions, mini = pcall(require, 'mini.sessions')
 
 if not has_telescope then
   error('This plugins requires nvim-telescope/telescope.nvim')
@@ -23,7 +24,11 @@ local load_session = function(prompt_bufnr)
   local dir = actions_state.get_selected_entry(prompt_bufnr).value
   actions.close(prompt_bufnr, true)
   local current_sdir = vim.api.nvim_eval('v:this_session')
-  if current_sdir or current_sdir ~= '' then --save current session if exist
+  if has_minisessions then
+    if mini.config.autowrite then
+      vim.fn.execute("mksession! "..current_sdir)
+    end
+  elseif current_sdir or current_sdir ~= '' then --save current session if exist
     vim.fn.execute("mksession! "..current_sdir)
   end
 	--  vim.fn.execute(":LspStop", "silent")
