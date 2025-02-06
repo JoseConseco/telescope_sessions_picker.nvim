@@ -24,12 +24,14 @@ local load_session = function(prompt_bufnr)
   local dir = actions_state.get_selected_entry(prompt_bufnr).value
   actions.close(prompt_bufnr, true)
   local current_sdir = vim.api.nvim_eval('v:this_session')
-  if has_minisessions then
-    if mini.config.autowrite then
-      vim.fn.execute("mksession! "..current_sdir)
+  if current_sdir and current_sdir ~= "" then --save current session if exist
+    if has_minisessions then
+      if mini.config.autowrite then
+        vim.fn.execute("mksession! " .. current_sdir)
+      end
+    else
+      vim.fn.execute("mksession! " .. current_sdir)
     end
-  elseif current_sdir or current_sdir ~= '' then --save current session if exist
-    vim.fn.execute("mksession! "..current_sdir)
   end
 	--  vim.fn.execute(":LspStop", "silent")
 	--  vim.fn.execute(":bufdo bwipeout!", "silent")
